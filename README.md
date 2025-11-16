@@ -1,5 +1,8 @@
 
-  <h1>🚀 Debeatzgh GitHub Pages Product Showcase</h1> >>  <p>Explore premium, modern web pages built for creators, startups, and digital entrepreneurs.
+  <h1>🚀 Debeatzgh GitHub Pages Product Showcase</h1> <a href="https://docs.google.com/document/d/10iWz6wbpGEucS5SH57XlQIP4b0H80M4ydh7a0kebErI/edit?usp=drivesdk" target="_blank">
+  <img src="https://img.shields.io/badge/-PAGES%20DOCS-0A66C2?style=for-the-badge&logo=google-docs&logoColor=white">
+  </a>
+  <p>Explore premium, modern web pages built for creators, startups, and digital entrepreneurs.
 
   Click below to preview or order your own custom page.</p>
 </header>
