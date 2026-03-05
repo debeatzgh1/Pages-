@@ -117,13 +117,13 @@
                 <p class="text-gray-400 text-sm">Automating business solutions & content.</p>
             </div>
 
-            <div class="hub-card p-8" data-aos="fade-up" data-aos-delay="300" onclick="openPortal('https://g.dev/debeatzgh')">
+            <div class="hub-card p-8" data-aos="fade-up" data-aos-delay="300" onclick="openPortal('https://debeatzgh1.github.io/1')">
                 <i class="fab fa-google text-4xl text-blue-400 mb-6"></i>
                 <h3 class="text-xl font-bold mb-2">G-Dev Node</h3>
                 <p class="text-gray-400 text-sm">Verified Developer credentials & badges.</p>
             </div>
 
-            <div class="hub-card p-8" data-aos="fade-up" data-aos-delay="400" onclick="openPortal('https://debeatz4.wixsite.com/debeatz')">
+            <div class="hub-card p-8" data-aos="fade-up" data-aos-delay="400" onclick="openPortal('https://debeatzgh1.github.io/blogs')">
                 <i class="fas fa-briefcase text-4xl text-yellow-400 mb-6"></i>
                 <h3 class="text-xl font-bold mb-2">Dkonsult</h3>
                 <p class="text-gray-400 text-sm">Premium client services & technical support.</p>
@@ -153,8 +153,8 @@
         </div>
     </div>
 
-    <a href="https://wa.me/233549757544?text=Hi%20DeBeatz,%20I'm%20at%20your%20Hub%20and%20want%20to%20hire%20you." target="_blank" class="hire-float">
-        <i class="fab fa-whatsapp"></i> Hire 0549757544
+    <a href="https://wa.me/233270201181?text=Hi%20DeBeatz,%20I'm%20at%20your%20Hub%20and%20want%20to%20hire%20you." target="_blank" class="hire-float">
+        <i class="fab fa-whatsapp"></i> contact 
     </a>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
