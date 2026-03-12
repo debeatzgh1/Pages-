@@ -1,23 +1,4 @@
 
-
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeBeatzGH | Unified Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <script src="https://cdn.jotfor.ms/s/static/latest/static/feedback2.js"></script>
-    <script>
-      var componentID = new JotformFeedback({
-        type: 0, width: 700, height: 500, fontColor: "#FFFFFF", background: "#bd10e0",
-        isCardForm: false, formId: "241335470278053", buttonText: "Sign in",
-        buttonSide: "top", buttonAlign: "right", base: "https://form.jotform.com/",
-      }).componentID;
-    </script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
 
