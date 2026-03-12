@@ -255,7 +255,7 @@ This UI hosts the **DeBeatzGH Digital Hub**, a unified interface designed to bri
     </div>
 
     <a href="https://wa.me/233270201181?text=Project%20Inquiry" target="_blank" class="fixed bottom-6 right-6 flex items-center gap-3 bg-[#25D366] text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-tighter shadow-2xl hover:scale-105 transition-all z-[500]">
-        <i class="fab fa-whatsapp text-lg"></i> Hire Me
+        <i class="fab fa-whatsapp text-lg"></i> contact 
     </a>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
