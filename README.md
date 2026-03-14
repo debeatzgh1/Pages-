@@ -1,3 +1,206 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --text-color: #ffffff;
+            --dock-bg: rgba(15, 15, 20, 0.95);
+            --dock-border: rgba(255, 255, 255, 0.12);
+            --accent: #FF1493;
+            --scroll-bg: #30363d;
+            --dev-green: #2ea44f;
+        }
+
+        body.light-mode {
+            --bg-color: #f0f2f5;
+            --text-color: #1c1e21;
+            --dock-bg: rgba(255, 255, 255, 0.95);
+            --dock-border: rgba(0, 0, 0, 0.1);
+            --scroll-bg: #e1e4e8;
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            transition: background 0.5s ease;
+            margin: 0;
+            min-height: 200vh;
+            scroll-behavior: smooth;
+        }
+
+        /* --- SOCIAL DOCK --- */
+        .social-dock {
+            position: fixed;
+            right: 25px;
+            bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            background: var(--dock-bg);
+            padding: 12px 10px;
+            border-radius: 50px;
+            border: 1px solid var(--dock-border);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            z-index: 10002;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .social-dock.show, .social-dock.is-locked { opacity: 1 !important; transform: translateY(0) !important; }
+        .social-dock.is-locked { border-color: var(--accent); }
+
+        /* --- DEV STATUS --- */
+        .dev-status {
+            font-size: 7px;
+            text-transform: uppercase;
+            font-weight: 900;
+            color: var(--dev-green);
+            letter-spacing: 0.5px;
+            text-align: center;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        #commit-date { color: var(--text-color); opacity: 0.6; display: block; margin-top: 2px; }
+
+        .theme-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #FFD700; cursor: pointer; transition: 0.3s;
+        }
+
+        /* --- ICONS --- */
+        .social-icon {
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; color: var(--text-color);
+            text-decoration: none; font-size: 1.1rem;
+            transition: 0.3s; position: relative;
+        }
+        .social-icon:hover { transform: scale(1.15); color: var(--accent); }
+
+        #backToTop {
+            width: 36px; height: 36px; background: var(--scroll-bg);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 0.8rem; opacity: 0; visibility: hidden;
+            transition: 0.4s; margin-top: 5px;
+        }
+        #backToTop.visible { opacity: 1; visibility: visible; }
+
+        .share-toast {
+            position: absolute; right: 55px; background: var(--accent);
+            color: #fff; padding: 4px 10px; border-radius: 4px;
+            font-size: 10px; font-weight: 800; opacity: 0;
+            transition: 0.3s; white-space: nowrap;
+        }
+
+        .sep { width: 18px; height: 1px; background: var(--dock-border); margin: 4px 0; }
+    </style>
+</head>
+<body id="top">
+
+    <div class="social-dock" id="socialDock">
+        <div class="dev-status">
+            Updated
+            <span id="commit-date">Loading...</span>
+        </div>
+
+        <div class="theme-btn" onclick="toggleThemeAndLock()" title="Theme & Lock">
+            <i class="fas fa-sun" id="themeIcon"></i>
+        </div>
+        
+        <a href="https://www.instagram.com/debeatzgh" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/Debeatzgh" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://debeatzgh1.github.io/Pages-/" target="_blank" class="social-icon"><i class="fas fa-layer-group"></i></a>
+        <a href="https://debeatzgh1.github.io/blogs/" target="_blank" class="social-icon"><i class="fas fa-rss"></i></a>
+
+        <div class="sep"></div>
+
+        <div class="social-icon" onclick="copySiteLink()" style="cursor: pointer;">
+            <i class="fas fa-share-alt"></i>
+            <div class="share-toast" id="shareToast">Copied!</div>
+        </div>
+
+        <div id="backToTop" onclick="scrollToTop()" title="Back to Top">
+            <i class="fas fa-chevron-up"></i>
+        </div>
+    </div>
+
+    <script>
+        const body = document.body;
+        const dock = document.getElementById('socialDock');
+        const themeIcon = document.getElementById('themeIcon');
+        const bttBtn = document.getElementById('backToTop');
+        const toast = document.getElementById('shareToast');
+        let isLocked = false;
+        let breatheInterval;
+
+        // --- FETCH GITHUB DATA ---
+        async function fetchLastCommit() {
+            try {
+                const response = await fetch('https://api.github.com/repos/debeatzgh1/debeatzgh/commits/main');
+                const data = await response.json();
+                const date = new Date(data.commit.author.date);
+                const options = { month: 'short', day: 'numeric' };
+                document.getElementById('commit-date').innerText = date.toLocaleDateString('en-US', options);
+            } catch (error) {
+                document.getElementById('commit-date').innerText = "Recent";
+            }
+        }
+
+        function toggleThemeAndLock() {
+            body.classList.toggle('light-mode');
+            const isLight = body.classList.contains('light-mode');
+            themeIcon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+            isLocked = true;
+            dock.classList.add('is-locked');
+            clearInterval(breatheInterval);
+        }
+
+        window.onscroll = () => {
+            if (window.scrollY > 300) bttBtn.classList.add('visible');
+            else bttBtn.classList.remove('visible');
+        };
+
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        async function copySiteLink() {
+            await navigator.clipboard.writeText(window.location.href);
+            toast.style.opacity = "1";
+            setTimeout(() => { toast.style.opacity = "0"; }, 2000);
+        }
+
+        function runBreathe() {
+            if (isLocked) return;
+            dock.classList.add('show');
+            setTimeout(() => { if (!isLocked) dock.classList.remove('show'); }, 4000);
+        }
+
+        function startBreatheCycle() {
+            clearInterval(breatheInterval);
+            runBreathe();
+            breatheInterval = setInterval(runBreathe, 8000);
+        }
+
+        // INIT
+        fetchLastCommit();
+        setTimeout(startBreatheCycle, 1000);
+    </script>
+</body>
+</html>
+
+
+
+
+
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
