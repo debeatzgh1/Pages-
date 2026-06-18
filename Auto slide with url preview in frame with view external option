@@ -1,0 +1,375 @@
+<!--
+  Blogger Product Catalog Carousel — GitHub Pages Iframer
+  Author: debeatzgh + ChatGPT
+  How to use in Blogger:
+  1) Create a new HTML/JavaScript gadget (Layout ➜ Add a Gadget ➜ HTML/JavaScript) OR paste into a post in HTML mode.
+  2) Paste this entire snippet. No external libraries needed.
+  3) Edit the DATA section to add/remove items.
+  Notes:
+  - "Preview" opens the site inside a modal iframe (same page).
+  - "Open" navigates to the GitHub Page in the same tab.
+  - Fully responsive, keyboard accessible, and touch-friendly.
+-->
+
+<style>
+  /* --- Reset-ish --- */
+  .bdz * { box-sizing: border-box; }
+  .bdz { font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif; color: #0f172a; }
+
+  /* --- Theme Tokens --- */
+  :root {
+    --bdz-bg: #f8fafc;           /* slate-50 */
+    --bdz-card: #ffffff;         /* white */
+    --bdz-ink: #0f172a;          /* slate-900 */
+    --bdz-sub: #475569;          /* slate-600 */
+    --bdz-brand: #2563eb;        /* blue-600 */
+    --bdz-accent: #f59e0b;       /* amber-500 */
+    --bdz-ring: rgba(37, 99, 235, 0.25);
+    --bdz-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    --bdz-radius: 16px;
+  }
+
+  /* --- Section Wrapper --- */
+  .bdz-catalog { background: var(--bdz-bg); padding: 28px 16px; border-radius: var(--bdz-radius); position: relative; overflow: hidden; }
+  .bdz-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 16px; }
+  .bdz-title { font-size: clamp(1.1rem, 2vw, 1.6rem); font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+  .bdz-subtitle { font-size: 0.95rem; color: var(--bdz-sub); margin: 4px 0 0 0; }
+
+  /* --- CTA banner --- */
+  .bdz-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 16px 0 10px; }
+  .bdz-cta-btn { appearance: none; border: none; padding: 10px 14px; border-radius: 999px; font-weight: 700; cursor: pointer; background: var(--bdz-brand); color: #fff; box-shadow: var(--bdz-shadow); transition: transform .15s ease, box-shadow .2s ease; }
+  .bdz-cta-btn:hover { transform: translateY(-1px); }
+  .bdz-cta-btn:focus { outline: 3px solid var(--bdz-ring); outline-offset: 2px; }
+  .bdz-cta-btn.pulse { animation: bdzPulse 2.2s infinite; }
+  @keyframes bdzPulse { 0% { box-shadow: 0 0 0 0 rgba(37,99,235,0.45);} 70% { box-shadow: 0 0 0 16px rgba(37,99,235,0);} 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0);} }
+
+  /* --- Carousel --- */
+  .bdz-carousel { position: relative; }
+  .bdz-track { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 12px 4px 18px; scroll-behavior: smooth; }
+  .bdz-card { min-width: clamp(260px, 42vw, 360px); background: var(--bdz-card); border-radius: var(--bdz-radius); box-shadow: var(--bdz-shadow); scroll-snap-align: start; overflow: hidden; position: relative; transition: transform .2s ease, box-shadow .2s ease; }
+  .bdz-card:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(15,23,42,.12); }
+
+  .bdz-thumb-wrap { position: relative; aspect-ratio: 16/9; background: #e2e8f0; overflow: hidden; }
+  .bdz-thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .bdz-chip { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,.85); color: var(--bdz-ink); font-size: 12px; padding: 4px 8px; border-radius: 999px; backdrop-filter: blur(6px); }
+
+  .bdz-body { padding: 14px; }
+  .bdz-item-title { font-size: 1.05rem; font-weight: 800; margin: 0 0 6px; letter-spacing: -0.015em; }
+  .bdz-desc { color: var(--bdz-sub); font-size: .92rem; line-height: 1.35rem; min-height: 2.7rem; margin: 0 0 10px; }
+
+  .bdz-actions { display: flex; gap: 10px; }
+  .bdz-btn { flex: 1; appearance: none; border: none; padding: 10px 12px; border-radius: 10px; font-weight: 700; cursor: pointer; background: #eef2ff; color: #1e293b; transition: transform .12s ease, background .12s ease; }
+  .bdz-btn:hover { transform: translateY(-1px); }
+  .bdz-btn.primary { background: var(--bdz-brand); color: #fff; }
+  .bdz-btn.secondary { background: #f1f5f9; }
+  .bdz-btn.ghost { background: transparent; border: 1px dashed #cbd5e1; }
+
+  /* --- Carousel Controls --- */
+  .bdz-nav { position: absolute; inset: 0; pointer-events: none; }
+  .bdz-arrow { position: absolute; top: 50%; transform: translateY(-50%); pointer-events: auto; border: none; background: rgba(15,23,42,.75); color: #fff; width: 40px; height: 40px; border-radius: 999px; cursor: pointer; display: grid; place-items: center; box-shadow: var(--bdz-shadow); }
+  .bdz-arrow:hover { background: rgba(15,23,42,.95); }
+  .bdz-prev { left: 6px; }
+  .bdz-next { right: 6px; }
+
+  .bdz-dots { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
+  .bdz-dot { width: 8px; height: 8px; border-radius: 999px; background: #cbd5e1; border: none; }
+  .bdz-dot.active { background: var(--bdz-ink); }
+
+  /* --- Modal Iframe --- */
+  .bdz-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(2,6,23,.65); backdrop-filter: blur(3px); z-index: 99999; }
+  .bdz-modal.open { display: flex; animation: bdzFade .18s ease; }
+  @keyframes bdzFade { from { opacity: 0 } to { opacity: 1 } }
+  .bdz-modal-card { width: min(1200px, 95vw); height: min(85vh, 820px); background: var(--bdz-card); border-radius: 14px; box-shadow: 0 25px 80px rgba(0,0,0,.35); overflow: hidden; position: relative; }
+  .bdz-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid #e2e8f0; }
+  .bdz-modal-title { font-weight: 800; font-size: 0.98rem; }
+  .bdz-modal-actions { display: flex; gap: 8px; }
+  .bdz-close, .bdz-open-page { border: none; border-radius: 8px; padding: 8px 10px; font-weight: 700; cursor: pointer; }
+  .bdz-open-page { background: #0ea5e9; color: #fff; }
+  .bdz-close { background: #e2e8f0; }
+  .bdz-iframe-wrap { position: relative; height: calc(100% - 46px); }
+  .bdz-iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .bdz-skeleton { position: absolute; inset: 0; background: linear-gradient(120deg, #f1f5f9 20%, #e2e8f0 38%, #f1f5f9 61%); background-size: 200% 100%; animation: bdzShimmer 1.3s infinite; }
+  @keyframes bdzShimmer { 0% { background-position: 180% 0 } 100% { background-position: -20% 0 } }
+
+  /* --- No-JS fallback --- */
+  .bdz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+
+  /* --- Small helpers --- */
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+</style>
+
+<section class="bdz bdz-catalog" role="region" aria-label="Product Catalog Carousel">
+  <header class="bdz-heading">
+    <div>
+      <h2 class="bdz-title">Frontend Scripts & Widgets — GitHub Pages</h2>
+      <p class="bdz-subtitle">Tap a card to preview instantly. Everything opens inline with an iframe or in the same tab.</p>
+    </div>
+    <div class="bdz-cta">
+      <button class="bdz-cta-btn pulse" data-bdz-more>Explore more scripts</button>
+    </div>
+  </header>
+
+  <div class="bdz-carousel" id="bdzCarousel" aria-roledescription="carousel">
+    <div class="bdz-track" id="bdzTrack"></div>
+    <div class="bdz-nav" aria-hidden="false">
+      <button class="bdz-arrow bdz-prev" aria-label="Previous">
+        <span aria-hidden="true">&#10094;</span>
+      </button>
+      <button class="bdz-arrow bdz-next" aria-label="Next">
+        <span aria-hidden="true">&#10095;</span>
+      </button>
+    </div>
+  </div>
+  <div class="bdz-dots" id="bdzDots" aria-label="Carousel pagination"></div>
+
+  <noscript>
+    <div class="bdz-grid">
+      <!-- Static fallback if JS is disabled (edit as needed) -->
+      <a href="https://beatzde4.blogspot.com/p/firebase-curated-front-end-components.html" style="text-decoration:none;">
+        <div class="bdz-card">
+          <div class="bdz-thumb-wrap"></div>
+          <div class="bdz-body">
+            <h3 class="bdz-item-title">Browse More Scripts</h3>
+            <p class="bdz-desc">Open the full catalog of reusable front-end components and Blogger widgets.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </noscript>
+</section>
+
+<!-- Modal viewer -->
+<div class="bdz-modal" id="bdzModal" role="dialog" aria-modal="true" aria-labelledby="bdzModalTitle">
+  <div class="bdz-modal-card">
+    <div class="bdz-modal-head">
+      <div class="bdz-modal-title" id="bdzModalTitle">Preview</div>
+      <div class="bdz-modal-actions">
+        <button class="bdz-open-page" id="bdzOpenFull">Open</button>
+        <button class="bdz-close" id="bdzClose">Close</button>
+      </div>
+    </div>
+    <div class="bdz-iframe-wrap">
+      <div class="bdz-skeleton" id="bdzSkeleton"></div>
+      <iframe class="bdz-iframe" id="bdzIframe" title="Inline Preview"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ===== 1) DATA: Add or edit catalog items here =====
+  const BDZ_DATA = [
+    {
+      url: "https://debeatzgh1.github.io/Custom-Blogger-Theme-for-with-Dynamic-Post-Loading-and-Logo-/",
+      title: "Custom Blogger Theme (Dynamic Loading + Logo)",
+      desc: "Mobile-first Blogger template featuring infinite/dynamic post loading, sticky header with logo, and clean modern UI.",
+      thumb: "https://debeatzgh.wordpress.com/wp-content/uploads/2025/08/generateamobile-firstresponsivebloggertemplatewithcustomizablecolorsfontsandsections1576324612066211977.jpg",
+      tag: "Theme"
+    },
+    {
+      url: "https://debeatzgh1.github.io/popup-html-page-generator-blogger/",
+      title: "Popup HTML Page Generator (Blogger)",
+      desc: "Generate clean popup pages/embeds for Blogger posts with thumbnail, title, and Read More — perfect for cross-blog promotion.",
+      thumb: "https://debeatzgh.wordpress.com/wp-content/uploads/2025/08/createatoolthatgeneratesiframeorcard-styleembedsforindividualbloggerpostscompletewiththumbnailtitleandreadmorebuttonforcross-blogpromotion754077096311972631.jpg",
+      tag: "Tool"
+    },
+    {
+      url: "https://debeatzgh1.github.io/Sliding-Newsletter-Signup-Widget-with-Pulse-Animation/",
+      title: "Sliding Newsletter Signup (Pulse)",
+      desc: "Attention-grabbing email opt-in with slide-in panel and subtle pulse glow to boost signups.",
+      thumb: "https://debeatzgh.wordpress.com/wp-content/uploads/2025/08/amodernflat-styleillustrationofanotificationbellwithglowinghighlightssurroundedbyabstractshapespaperenvelopesanddigitalicons28emailmessageupdate293314991682681990671.jpg",
+      tag: "Widget"
+    },
+    {
+      url: "https://debeatzgh1.github.io/Blogger-Product-Carousel-with-WhatsApp-Floating-Button/",
+      title: "Product Carousel + WhatsApp Button",
+      desc: "Showcase products with a slick carousel and instant WhatsApp chat — great for affiliate shops.",
+      thumb: "https://debeatzgh.wordpress.com/wp-content/uploads/2025/08/designacleanmodernthumbnailforabloggerproductscarouseltool1711994558720457535.jpg",
+      tag: "Carousel"
+    },
+    {
+      url: "https://debeatzgh1.github.io/-Floating-Dock-Smart-Iframe-Modal/",
+      title: "Floating Dock + Smart Iframe Modal",
+      desc: "Modern floating dock of round icons (Patreon, Blogger, GitHub, etc.) with on-page iframe modal previews.",
+      thumb: "https://debeatzgh.wordpress.com/wp-content/uploads/2025/08/amodernminimallayoutwithafloatingdockofcolorfulroundicons28patreonbloggergithub29ontherightsideofacleanwebpagemockup6676994054500999142.jpg",
+      tag: "UI"
+    },
+    {
+      url: "https://debeatzgh1.github.io/Modern-homepage-styling-with-TailwindCSS-/",
+      title: "Modern Homepage Styling (Tailwind)",
+      desc: "Starter homepage template: hero, features, and CTA styled like a SaaS landing page.",
+      thumb: "https://debeatzgh.wordpress.com/wp-content/uploads/2025/08/createamodernandcleanthumbnailforawebdevelopmentproducttitledmodernhomepagestylingtemplatewithtailwindcss3420170625469385526.jpg",
+      tag: "Template"
+    },
+    {
+      url: "https://debeatzgh1.github.io/TechAdapt-Solutions-Strategies-for-Modern-Startups-and-Individuals/",
+      title: "TechAdapt Strategies (Guide)",
+      desc: "Actionable strategies and starter components tailored for startups and solo builders.",
+      thumb: "https://debeatzgh.wordpress.com/wp-content/uploads/2025/08/wp-17550417188267308669484942620808.jpg",
+      tag: "Guide"
+    }
+  ];
+
+  const MORE_URL = "https://beatzde4.blogspot.com/p/firebase-curated-front-end-components.html";
+
+  // ===== 2) DOM refs =====
+  const track = document.getElementById('bdzTrack');
+  const dots = document.getElementById('bdzDots');
+  const carousel = document.getElementById('bdzCarousel');
+  const prevBtn = carousel.querySelector('.bdz-prev');
+  const nextBtn = carousel.querySelector('.bdz-next');
+  const ctaMore = document.querySelector('[data-bdz-more]');
+
+  const modal = document.getElementById('bdzModal');
+  const iframe = document.getElementById('bdzIframe');
+  const modalTitle = document.getElementById('bdzModalTitle');
+  const openFull = document.getElementById('bdzOpenFull');
+  const closeBtn = document.getElementById('bdzClose');
+  const skeleton = document.getElementById('bdzSkeleton');
+
+  // ===== 3) Build Cards =====
+  const frag = document.createDocumentFragment();
+  BDZ_DATA.forEach((item, idx) => {
+    const card = document.createElement('article');
+    card.className = 'bdz-card';
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', item.title);
+
+    card.innerHTML = `
+      <div class="bdz-thumb-wrap">
+        <img class="bdz-thumb" loading="lazy" referrerpolicy="no-referrer" alt="${item.title} thumbnail" src="${item.thumb}">
+        <span class="bdz-chip">${item.tag || 'Script'}</span>
+      </div>
+      <div class="bdz-body">
+        <h3 class="bdz-item-title">${item.title}</h3>
+        <p class="bdz-desc">${item.desc}</p>
+        <div class="bdz-actions">
+          <button class="bdz-btn primary" data-preview data-url="${item.url}" data-title="${item.title}">Preview</button>
+          <button class="bdz-btn secondary" data-open data-url="${item.url}" aria-label="Open ${item.title}">Open</button>
+        </div>
+      </div>
+    `;
+
+    // Click on card image or body also previews
+    card.querySelector('.bdz-thumb-wrap').addEventListener('click', () => openModal(item.url, item.title));
+    card.querySelector('.bdz-body').addEventListener('click', (e) => {
+      const isButton = e.target.closest('button');
+      if (!isButton) openModal(item.url, item.title);
+    });
+
+    // Buttons
+    card.querySelector('[data-preview]').addEventListener('click', (e) => {
+      e.stopPropagation();
+      openModal(item.url, item.title);
+    });
+    card.querySelector('[data-open]').addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.location.href = item.url; // same tab
+    });
+
+    frag.appendChild(card);
+  });
+  track.appendChild(frag);
+
+  // ===== 4) Dots =====
+  const pageSize = () => {
+    // Estimate cards per view
+    const card = track.querySelector('.bdz-card');
+    if (!card) return 1;
+    const vw = track.clientWidth;
+    const cw = card.clientWidth + 14; // card + gap
+    return Math.max(1, Math.round(vw / cw));
+  };
+
+  const pageCount = () => Math.max(1, Math.ceil(BDZ_DATA.length / pageSize()));
+
+  function buildDots(){
+    dots.innerHTML = '';
+    const pages = pageCount();
+    for (let i=0; i<pages; i++){
+      const dot = document.createElement('button');
+      dot.className = 'bdz-dot' + (i===0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to slide '+(i+1));
+      dot.addEventListener('click', () => goToPage(i));
+      dots.appendChild(dot);
+    }
+  }
+  buildDots();
+  window.addEventListener('resize', () => { buildDots(); });
+
+  function goToPage(i){
+    const ps = pageSize();
+    const card = track.querySelector('.bdz-card');
+    if (!card) return;
+    const cw = card.clientWidth + 14;
+    track.scrollTo({ left: i * cw * ps, behavior: 'smooth' });
+  }
+
+  function updateDots(){
+    const ps = pageSize();
+    const card = track.querySelector('.bdz-card');
+    if (!card) return;
+    const cw = card.clientWidth + 14;
+    const idx = Math.round(track.scrollLeft / (cw * ps));
+    const all = dots.querySelectorAll('.bdz-dot');
+    all.forEach((d,i)=> d.classList.toggle('active', i===idx));
+  }
+  track.addEventListener('scroll', () => { updateDots(); });
+
+  // ===== 5) Navigation & Autoplay =====
+  prevBtn.addEventListener('click', () => { goRel(-1); });
+  nextBtn.addEventListener('click', () => { goRel(1); });
+
+  function goRel(delta){
+    const ps = pageSize();
+    const card = track.querySelector('.bdz-card');
+    if (!card) return;
+    const cw = card.clientWidth + 14;
+    const cur = Math.round(track.scrollLeft / (cw * ps));
+    const next = Math.max(0, Math.min(pageCount()-1, cur + delta));
+    goToPage(next);
+  }
+
+  let autoTimer = setInterval(()=>{ goRel(1); if (dots.querySelectorAll('.bdz-dot.active').length && dots.lastChild.classList.contains('active')) goToPage(0); }, 5000);
+  [track, carousel].forEach(el=>{
+    el.addEventListener('mouseenter', ()=> clearInterval(autoTimer));
+    el.addEventListener('mouseleave', ()=> autoTimer = setInterval(()=>{ goRel(1); if (dots.lastChild.classList.contains('active')) goToPage(0); }, 5000));
+  });
+  // Keyboard
+  carousel.addEventListener('keydown', (e)=>{ if (e.key==='ArrowLeft') goRel(-1); if (e.key==='ArrowRight') goRel(1); });
+
+  // ===== 6) Modal Iframe Logic =====
+  function openModal(url, title){
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    modalTitle.textContent = title || 'Preview';
+    iframe.src = '';
+    skeleton.style.display = 'block';
+    setTimeout(()=>{ iframe.src = url; }, 60);
+    openFull.onclick = () => { window.location.href = url; };
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+    iframe.src = '';
+  }
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e)=>{ if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeModal(); });
+  iframe.addEventListener('load', ()=>{ skeleton.style.display = 'none'; });
+
+  // ===== 7) CTA: View More Scripts =====
+  ctaMore.addEventListener('click', ()=> { window.location.href = MORE_URL; });
+
+  // ===== 8) Progressive image loading (optional nicety) =====
+  const imgs = track.querySelectorAll('img[loading="lazy"]');
+  const io = ('IntersectionObserver' in window) ? new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if (entry.isIntersecting){
+        const img = entry.target; img.src = img.getAttribute('src'); io.unobserve(img);
+      }
+    })
+  }, { root: track, rootMargin: '100px' }) : null;
+  if (io) imgs.forEach(img=> io.observe(img));
+})();
+</script>
