@@ -37,7 +37,7 @@
 
   /* --- CTA banner --- */
   .bdz-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 16px 0 10px; }
-  .bdz-cta-btn { appearance: none; border: none; padding: 10px 14px; border-radius: 999px; font-weight: 700; cursor: pointer; background: var(--bdz-brand); color: #fff; box-shadow: var(--bdz-shadow); transition: transform .15s ease, box-shadow .2s ease; }
+  .bdz-cta-btn { appearance: none; border: none; padding: 10px 14px; border-radius: 999px; font-weight: 500; cursor: pointer; background: var(--bdz-brand); color: #fff; box-shadow: var(--bdz-shadow); transition: transform .15s ease, box-shadow .2s ease; }
   .bdz-cta-btn:hover { transform: translateY(-1px); }
   .bdz-cta-btn:focus { outline: 3px solid var(--bdz-ring); outline-offset: 2px; }
   .bdz-cta-btn.pulse { animation: bdzPulse 2.2s infinite; }
@@ -46,19 +46,19 @@
   /* --- Carousel --- */
   .bdz-carousel { position: relative; }
   .bdz-track { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 12px 4px 18px; scroll-behavior: smooth; }
-  .bdz-card { min-width: clamp(260px, 42vw, 360px); background: var(--bdz-card); border-radius: var(--bdz-radius); box-shadow: var(--bdz-shadow); scroll-snap-align: start; overflow: hidden; position: relative; transition: transform .2s ease, box-shadow .2s ease; }
+  .bdz-card { min-width: clamp(160px, 32vw, 260px); background: var(--bdz-card); border-radius: var(--bdz-radius); box-shadow: var(--bdz-shadow); scroll-snap-align: start; overflow: hidden; position: relative; transition: transform .2s ease, box-shadow .2s ease; }
   .bdz-card:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(15,23,42,.12); }
 
   .bdz-thumb-wrap { position: relative; aspect-ratio: 16/9; background: #e2e8f0; overflow: hidden; }
-  .bdz-thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .bdz-thumb { width: 80%; height: 80%; object-fit: cover; display: block; }
   .bdz-chip { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,.85); color: var(--bdz-ink); font-size: 12px; padding: 4px 8px; border-radius: 999px; backdrop-filter: blur(6px); }
 
   .bdz-body { padding: 14px; }
-  .bdz-item-title { font-size: 1.05rem; font-weight: 800; margin: 0 0 6px; letter-spacing: -0.015em; }
+  .bdz-item-title { font-size: 1.05rem; font-weight: 600; margin: 0 0 6px; letter-spacing: -0.015em; }
   .bdz-desc { color: var(--bdz-sub); font-size: .92rem; line-height: 1.35rem; min-height: 2.7rem; margin: 0 0 10px; }
 
   .bdz-actions { display: flex; gap: 10px; }
-  .bdz-btn { flex: 1; appearance: none; border: none; padding: 10px 12px; border-radius: 10px; font-weight: 700; cursor: pointer; background: #eef2ff; color: #1e293b; transition: transform .12s ease, background .12s ease; }
+  .bdz-btn { flex: 1; appearance: none; border: none; padding: 10px 12px; border-radius: 10px; font-weight: 500; cursor: pointer; background: #eef2ff; color: #1e293b; transition: transform .12s ease, background .12s ease; }
   .bdz-btn:hover { transform: translateY(-1px); }
   .bdz-btn.primary { background: var(--bdz-brand); color: #fff; }
   .bdz-btn.secondary { background: #f1f5f9; }
@@ -66,7 +66,7 @@
 
   /* --- Carousel Controls --- */
   .bdz-nav { position: absolute; inset: 0; pointer-events: none; }
-  .bdz-arrow { position: absolute; top: 50%; transform: translateY(-50%); pointer-events: auto; border: none; background: rgba(15,23,42,.75); color: #fff; width: 40px; height: 40px; border-radius: 999px; cursor: pointer; display: grid; place-items: center; box-shadow: var(--bdz-shadow); }
+  .bdz-arrow { position: absolute; top: 40%; transform: translateY(-50%); pointer-events: auto; border: none; background: rgba(15,23,42,.75); color: #fff; width: 40px; height: 40px; border-radius: 999px; cursor: pointer; display: grid; place-items: center; box-shadow: var(--bdz-shadow); }
   .bdz-arrow:hover { background: rgba(15,23,42,.95); }
   .bdz-prev { left: 6px; }
   .bdz-next { right: 6px; }
@@ -79,15 +79,15 @@
   .bdz-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(2,6,23,.65); backdrop-filter: blur(3px); z-index: 99999; }
   .bdz-modal.open { display: flex; animation: bdzFade .18s ease; }
   @keyframes bdzFade { from { opacity: 0 } to { opacity: 1 } }
-  .bdz-modal-card { width: min(1200px, 95vw); height: min(85vh, 820px); background: var(--bdz-card); border-radius: 14px; box-shadow: 0 25px 80px rgba(0,0,0,.35); overflow: hidden; position: relative; }
+  .bdz-modal-card { width: min(1200px, 95vw); height: min(85vh, 720px); background: var(--bdz-card); border-radius: 14px; box-shadow: 0 25px 80px rgba(0,0,0,.35); overflow: hidden; position: relative; }
   .bdz-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid #e2e8f0; }
-  .bdz-modal-title { font-weight: 800; font-size: 0.98rem; }
+  .bdz-modal-title { font-weight: 600; font-size: 0.98rem; }
   .bdz-modal-actions { display: flex; gap: 8px; }
-  .bdz-close, .bdz-open-page { border: none; border-radius: 8px; padding: 8px 10px; font-weight: 700; cursor: pointer; }
+  .bdz-close, .bdz-open-page { border: none; border-radius: 8px; padding: 8px 10px; font-weight: 500; cursor: pointer; }
   .bdz-open-page { background: #0ea5e9; color: #fff; }
   .bdz-close { background: #e2e8f0; }
-  .bdz-iframe-wrap { position: relative; height: calc(100% - 46px); }
-  .bdz-iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .bdz-iframe-wrap { position: relative; height: calc(80% - 36px); }
+  .bdz-iframe { position: absolute; inset: 0; width: 100%; height: 90%; border: 0; }
   .bdz-skeleton { position: absolute; inset: 0; background: linear-gradient(120deg, #f1f5f9 20%, #e2e8f0 38%, #f1f5f9 61%); background-size: 200% 100%; animation: bdzShimmer 1.3s infinite; }
   @keyframes bdzShimmer { 0% { background-position: 180% 0 } 100% { background-position: -20% 0 } }
 
