@@ -389,7 +389,7 @@
       <p class="bdz-subtitle">Tap a card to preview instantly. Everything opens inline with an iframe or in the same tab.</p>
     </div>
     <div class="bdz-cta">
-      <button class="bdz-cta-btn pulse" data-bdz-more>Explore more scripts</button>
+      <button class="bdz-cta-btn pulse" data-bdz-more></button>
     </div>
   </header>
 
