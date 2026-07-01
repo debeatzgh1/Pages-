@@ -1,0 +1,415 @@
+<div id="dbz-faq-hub">
+    <style>
+        #dbz-faq-hub {
+            --dbz-space-bg: #090d16;
+            --dbz-panel-bg: rgba(15, 23, 42, 0.65);
+            --dbz-card-border: rgba(255, 255, 255, 0.06);
+            --dbz-text-main: #f8fafc;
+            --dbz-text-muted: #94a3b8;
+            --dbz-accent-neon: #d946ef; /* Ehub / DeBeatzGH Accent Magenta */
+            --dbz-accent-blue: #3b82f6;
+            
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: var(--dbz-space-bg);
+            color: var(--dbz-text-main);
+            padding: 40px 16px;
+            max-width: 768px;
+            margin: 0 auto;
+            border-radius: 24px;
+        }
+
+        #dbz-faq-hub h2 {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 900;
+            margin-bottom: 24px;
+            background: linear-gradient(45deg, var(--dbz-text-main), var(--dbz-text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        /* Swipeable Mobile Category Bar */
+        #dbz-faq-hub .category-slider {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--dbz-card-border);
+        }
+
+        #dbz-faq-hub .category-slider::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome/Safari */
+        }
+
+        #dbz-faq-hub .cat-btn {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--dbz-card-border);
+            color: var(--dbz-text-muted);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #dbz-faq-hub .cat-btn.active {
+            background: linear-gradient(135deg, var(--dbz-accent-neon) 0%, var(--dbz-accent-blue) 100%);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(217, 70, 239, 0.25);
+        }
+
+        /* Lazy Load Accordion Layout */
+        #dbz-faq-hub .faq-wrapper {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #dbz-faq-hub .faq-wrapper.active {
+            display: flex;
+            animation: dbzFadeIn 0.35s ease;
+        }
+
+        #dbz-faq-hub .faq-item {
+            background: var(--dbz-panel-bg);
+            border: 1px solid var(--dbz-card-border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: border-color 0.2s ease;
+        }
+
+        #dbz-faq-hub .faq-trigger {
+            width: 100%;
+            padding: 16px 20px;
+            text-align: left;
+            background: transparent;
+            border: none;
+            color: var(--dbz-text-main);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #dbz-faq-hub .faq-icon {
+            font-size: 0.75rem;
+            color: var(--dbz-text-muted);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+        }
+
+        #dbz-faq-hub .faq-item.open {
+            border-color: rgba(217, 70, 239, 0.25);
+        }
+
+        #dbz-faq-hub .faq-item.open .faq-icon {
+            transform: rotate(180deg);
+            color: var(--dbz-accent-neon);
+        }
+
+        #dbz-faq-hub .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        #dbz-faq-hub .faq-content-inner {
+            padding: 16px 20px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: var(--dbz-text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        @keyframes dbzFadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="category-slider" id="dbz-faq-cats">
+        <button class="cat-btn active" onclick="switchFaqCategory('general')">General Portal</button>
+        <button class="cat-btn" onclick="switchFaqCategory('ehub')">Ehub Streaming</button>
+        <button class="cat-btn" onclick="switchFaqCategory('resources')">Creative Assets</button>
+    </div>
+
+    <div class="faq-wrapper active" id="faq-general">
+        <div class="faq-item">
+            <button class="faq-trigger" onclick="toggleFaqAccordion(this, 'What is the DeBeatzGH workspace hub?')">
+                <span>What is the DeBeatzGH workspace hub?</span>
+                <span class="faq-icon">▼</span>
+            </button>
+            <div class="faq-content"><div class="faq-content-inner"></div></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-trigger" onclick="toggleFaqAccordion(this, 'How do I submit forms via GitHub pages safely?')">
+                <span>How do I submit forms via GitHub pages safely?</span>
+                <span class="faq-icon">▼</span>
+            </button>
+            <div class="faq-content"><div class="faq-content-inner"></div></div>
+        </div>
+    </div>
+
+    <div class="faq-wrapper" id="faq-ehub">
+        <div class="faq-item">
+            <button class="faq-trigger" onclick="toggleFaqAccordion(this, 'Where can I find the official music countdown charts?')">
+                <span>Where can I find the official music countdown charts?</span>
+                <span class="faq-icon">▼</span>
+            </button>
+            <div class="faq-content"><div class="faq-content-inner"></div></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-trigger" onclick="toggleFaqAccordion(this, 'Can I integrate the floating Ehub widget into my blog?')">
+                <span>Can I integrate the floating Ehub widget into my blog?</span>
+                <span class="faq-icon">▼</span>
+            </button>
+            <div class="faq-content"><div class="faq-content-inner"></div></div>
+        </div>
+    </div>
+
+    <div class="faq-wrapper" id="faq-resources">
+        <div class="faq-item">
+            <button class="faq-trigger" onclick="toggleFaqAccordion(this, 'Are the blogger templates free to modify?')">
+                <span>Are the blogger templates free to modify?</span>
+                <span class="faq-icon">▼</span>
+            </button>
+            <div class="faq-content"><div class="faq-content-inner"></div></div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Switch Engine
+        function switchFaqCategory(catId) {
+            // Deactivate existing layouts
+            document.querySelectorAll('#dbz-faq-hub .faq-wrapper').forEach(wrapper => {
+                wrapper.classList.remove('active');
+            });
+            document.querySelectorAll('#dbz-faq-hub .cat-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Set current target view
+            document.getElementById(`faq-${catId}`).classList.add('active');
+            
+            // Highlight target tab element dynamically
+            const activeBtn = Array.from(document.querySelectorAll('#dbz-faq-hub .cat-btn')).find(btn => {
+                return btn.getAttribute('onclick').includes(catId);
+            });
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+        }
+
+        // Lazy-Loading Accordion Logic Engine
+        function toggleFaqAccordion(triggerElement, questionText) {
+            const faqItem = triggerElement.parentElement;
+            const contentPane = faqItem.querySelector('.faq-content');
+            const innerTextNode = faqItem.querySelector('.faq-content-inner');
+
+            // CRITICAL: Lazy Content Allocation Injection Guard
+            if (!innerTextNode.innerHTML || innerTextNode.innerHTML.trim() === "") {
+                innerTextNode.innerHTML = fetchLazyFaqData(questionText);
+            }
+
+            // Close other sibling items in the active view block
+            const currentWrapper = faqItem.parentElement;
+            currentWrapper.querySelectorAll('.faq-item').forEach(item => {
+                if (item !== faqItem) {
+                    item.classList.remove('open');
+                    item.querySelector('.faq-content').style.maxHeight = null;
+                }
+            });
+
+            // Toggle target element
+            if (faqItem.classList.contains('open')) {
+                faqItem.classList.remove('open');
+                contentPane.style.maxHeight = null;
+            } else {
+                faqItem.classList.add('open');
+                contentPane.style.maxHeight = contentPane.scrollHeight + "px";
+            }
+        }
+
+        // Mock Data Dictionary Repository (Simulates secure API thread processing)
+        function fetchLazyFaqData(question) {
+            const dictionary = {
+                "What is the DeBeatzGH workspace hub?": "The DeBeatzGH workspace hub is a unified dashboard designed to catalog tools, widgets, entertainment pipelines, and custom API interfaces for creators, developers, and platform managers.",
+                "How do I submit forms via GitHub pages safely?": "Our system integrates lightweight sandboxed oembed environments. Your form fields render lazily inside designated sandboxes, bypassing raw infrastructure processing for maximum data compliance.",
+                "Where can I find the official music countdown charts?": "All digital entertainment updates are broadcast live inside the Ehub portal stream. Simply deploy the layout toggle widget or launch our system carousel overlays to view updated ranks.",
+                "Can I integrate the floating Ehub widget into my blog?": "Yes. The modular architecture is designed precisely to deploy inside standard GitHub project directories or Blogger static layouts with full theme styling isolation properties.",
+                "Are the blogger templates free to modify?": "Absolutely. All layout templates, UI scripts, and asset tools generated across the DeBeatzGH ecosystem are distributed as completely customizable blueprints to scale up your platforms."
+            };
+            return dictionary[question] || "System parameter updated. Documentation log file is processing verification lines.";
+        }
+
+        // SWIPE GESTURE CONTROLS (Enables horizontal category swipe parsing for touch panels)
+        (function() {
+            const slider = document.getElementById('dbz-faq-cats');
+            let isDown = false;
+            let startX, scrollLeft;
+
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+            slider.addEventListener('mouseleave', () => isDown = false);
+            slider.addEventListener('mouseup', () => isDown = false);
+            slider.addEventListener('mousemove', (e) => {
+                if(!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 2;
+                slider.scrollLeft = scrollLeft - walk;
+            });
+        })();
+    </script>
+</div>
+
+<!--
+  Blogger Product Catalog Carousel — GitHub Pages Iframer
+  Author: debeatzgh + ChatGPT
+  How to use in Blogger:
+  1) Create a new HTML/JavaScript gadget (Layout ➜ Add a Gadget ➜ HTML/JavaScript) OR paste into a post in HTML mode.
+  2) Paste this entire snippet. No external libraries needed.
+  3) Edit the DATA section to add/remove items.
+  Notes:
+  - "Preview" opens the site inside a modal iframe (same page).
+  - "Open" navigates to the GitHub Page in the same tab.
+  - Fully responsive, keyboard accessible, and touch-friendly.
+-->
+
+<style>
+  /* --- Reset-ish --- */
+  .bdz * { box-sizing: border-box; }
+  .bdz { font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif; color: #0f172a; }
+
+  /* --- Theme Tokens --- */
+  :root {
+    --bdz-bg: #f8fafc;           /* slate-50 */
+    --bdz-card: #ffffff;         /* white */
+    --bdz-ink: #0f172a;          /* slate-900 */
+    --bdz-sub: #475569;          /* slate-600 */
+    --bdz-brand: #2563eb;        /* blue-600 */
+    --bdz-accent: #f59e0b;       /* amber-500 */
+    --bdz-ring: rgba(37, 99, 235, 0.25);
+    --bdz-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    --bdz-radius: 16px;
+  }
+
+  /* --- Section Wrapper --- */
+  .bdz-catalog { background: var(--bdz-bg); padding: 28px 16px; border-radius: var(--bdz-radius); position: relative; overflow: hidden; }
+  .bdz-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 16px; }
+  .bdz-title { font-size: clamp(1.1rem, 2vw, 1.6rem); font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+  .bdz-subtitle { font-size: 0.95rem; color: var(--bdz-sub); margin: 4px 0 0 0; }
+
+  /* --- CTA banner --- */
+  .bdz-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 16px 0 10px; }
+  .bdz-cta-btn { appearance: none; border: none; padding: 10px 14px; border-radius: 999px; font-weight: 500; cursor: pointer; background: var(--bdz-brand); color: #fff; box-shadow: var(--bdz-shadow); transition: transform .15s ease, box-shadow .2s ease; }
+  .bdz-cta-btn:hover { transform: translateY(-1px); }
+  .bdz-cta-btn:focus { outline: 3px solid var(--bdz-ring); outline-offset: 2px; }
+  .bdz-cta-btn.pulse { animation: bdzPulse 2.2s infinite; }
+  @keyframes bdzPulse { 0% { box-shadow: 0 0 0 0 rgba(37,99,235,0.45);} 70% { box-shadow: 0 0 0 16px rgba(37,99,235,0);} 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0);} }
+
+  /* --- Carousel --- */
+  .bdz-carousel { position: relative; }
+  .bdz-track { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 12px 4px 18px; scroll-behavior: smooth; }
+  .bdz-card { min-width: clamp(160px, 32vw, 260px); background: var(--bdz-card); border-radius: var(--bdz-radius); box-shadow: var(--bdz-shadow); scroll-snap-align: start; overflow: hidden; position: relative; transition: transform .2s ease, box-shadow .2s ease; }
+  .bdz-card:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(15,23,42,.12); }
+
+  .bdz-thumb-wrap { position: relative; aspect-ratio: 16/9; background: #e2e8f0; overflow: hidden; }
+  .bdz-thumb { width: 80%; height: 80%; object-fit: cover; display: block; }
+  .bdz-chip { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,.85); color: var(--bdz-ink); font-size: 12px; padding: 4px 8px; border-radius: 999px; backdrop-filter: blur(6px); }
+
+  .bdz-body { padding: 14px; }
+  .bdz-item-title { font-size: 1.05rem; font-weight: 600; margin: 0 0 6px; letter-spacing: -0.015em; }
+  .bdz-desc { color: var(--bdz-sub); font-size: .92rem; line-height: 1.35rem; min-height: 2.7rem; margin: 0 0 10px; }
+
+  .bdz-actions { display: flex; gap: 10px; }
+  .bdz-btn { flex: 1; appearance: none; border: none; padding: 10px 12px; border-radius: 10px; font-weight: 500; cursor: pointer; background: #eef2ff; color: #1e293b; transition: transform .12s ease, background .12s ease; }
+  .bdz-btn:hover { transform: translateY(-1px); }
+  .bdz-btn.primary { background: var(--bdz-brand); color: #fff; }
+  .bdz-btn.secondary { background: #f1f5f9; }
+  .bdz-btn.ghost { background: transparent; border: 1px dashed #cbd5e1; }
+
+  /* --- Carousel Controls --- */
+  .bdz-nav { position: absolute; inset: 0; pointer-events: none; }
+  .bdz-arrow { position: absolute; top: 40%; transform: translateY(-50%); pointer-events: auto; border: none; background: rgba(15,23,42,.75); color: #fff; width: 40px; height: 40px; border-radius: 999px; cursor: pointer; display: grid; place-items: center; box-shadow: var(--bdz-shadow); }
+  .bdz-arrow:hover { background: rgba(15,23,42,.95); }
+  .bdz-prev { left: 6px; }
+  .bdz-next { right: 6px; }
+
+  .bdz-dots { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
+  .bdz-dot { width: 8px; height: 8px; border-radius: 999px; background: #cbd5e1; border: none; }
+  .bdz-dot.active { background: var(--bdz-ink); }
+
+  /* --- Modal Iframe --- */
+  .bdz-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(2,6,23,.65); backdrop-filter: blur(3px); z-index: 99999; }
+  .bdz-modal.open { display: flex; animation: bdzFade .18s ease; }
+  @keyframes bdzFade { from { opacity: 0 } to { opacity: 1 } }
+  .bdz-modal-card { width: min(1200px, 95vw); height: min(85vh, 720px); background: var(--bdz-card); border-radius: 14px; box-shadow: 0 25px 80px rgba(0,0,0,.35); overflow: hidden; position: relative; }
+  .bdz-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid #e2e8f0; }
+  .bdz-modal-title { font-weight: 600; font-size: 0.98rem; }
+  .bdz-modal-actions { display: flex; gap: 8px; }
+  .bdz-close, .bdz-open-page { border: none; border-radius: 8px; padding: 8px 10px; font-weight: 500; cursor: pointer; }
+  .bdz-open-page { background: #0ea5e9; color: #fff; }
+  .bdz-close { background: #e2e8f0; }
+  .bdz-iframe-wrap { position: relative; height: calc(80% - 36px); }
+  .bdz-iframe { position: absolute; inset: 0; width: 100%; height: 90%; border: 0; }
+  .bdz-skeleton { position: absolute; inset: 0; background: linear-gradient(120deg, #f1f5f9 20%, #e2e8f0 38%, #f1f5f9 61%); background-size: 200% 100%; animation: bdzShimmer 1.3s infinite; }
+  @keyframes bdzShimmer { 0% { background-position: 180% 0 } 100% { background-position: -20% 0 } }
+
+  /* --- No-JS fallback --- */
+  .bdz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+
+  /* --- Small helpers --- */
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+</style>
+
+<section class="bdz bdz-catalog" role="region" aria-label="Product Catalog Carousel">
+  <header class="bdz-heading">
+    <div>
+      <h2 class="bdz-title">Frontend Scripts & Widgets — GitHub Pages</h2>
+      <p class="bdz-subtitle">Tap a card to preview instantly. Everything opens inline with an iframe or in the same tab.</p>
+    </div>
+    <div class="bdz-cta">
+      <button class="bdz-cta-btn pulse" data-bdz-more></button>
+    </div>
+  </header>
+
+  <div class="bdz-carousel" id="bdzCarousel" aria-roledescription="carousel">
+    <div class="bdz-track" id="bdzTrack"></div>
+    <div class="bdz-nav" aria-hidden="false">
+      <button class="bdz-arrow bdz-prev" aria-label="Previous">
+        <span aria-hidden="true">&#10094;</span>
+      </button>
+      <button class="bdz-arrow bdz-next" aria-label="Next">
+        <span aria-hidden="true">&#10095;</span>
+      </button>
+    </div>
+  </div>
+  <div class="bdz-dots" id="bdzDots" aria-label="Carousel pagination"></div>
+
+  <noscript>
+    <div class="bdz-grid">
+      <!-- Static fallback if JS is disabled (edit as needed) -->
+      <a href="https://beatzde4.blogspot.com/p/firebase-curated-front-end-components.html" style="text-decoration:none;">
+        <div class="bdz-card">
+          <div class="bdz-thumb-wrap"></div>
+          
