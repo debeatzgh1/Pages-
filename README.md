@@ -1,6 +1,5 @@
-```html
 <!-- =========================================================
- DEBEATZGH PREMIUM FAQ + RESOURCE HUB
+ FAQ + RESOURCE HUB
  GitHub Pages + Blogger Compatible
  Modern reusable widget with:
  ✔ Premium glassmorphism UI
@@ -471,7 +470,7 @@
   </div>
 
   <h1 class="dbz-title">
-    DeBeatzGH <span class="dbz-gradient">Resource Hub</span>
+    UI <span class="dbz-gradient">Resource Hub</span>
   </h1>
 
   <p class="dbz-desc">
